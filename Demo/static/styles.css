@@ -1,0 +1,198 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap');
+:root{
+    --primary-color: #4a90e2;
+    --primary-gradient: linear-gradient(90deg, #4a90e2 0%, #357ac8 100%);
+    --secondary-color: #f5f7fa;
+    --accent-color: #ffb347;
+    --text-color: #222;
+    --green-color: #47f26f;
+    --muted-text: #888;
+    --card-bg: #fff;
+    --border-radius: 14px;
+    --shadow: 0 4px 24px rgba(74, 144, 226, 0.08), 0 1.5px 4px rgba(0,0,0,0.04);
+    --font-family: 'Outfit', sans-serif;
+}
+
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: var(--font-family);
+}
+
+body {
+    background: var(--secondary-color);
+    min-height: 100vh;
+    overflow-x: hidden;
+}
+
+.container {
+    margin: 20px auto;
+    padding: 32px 24px;
+    max-width: 1100px;
+    background: var(--card-bg);
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+h1{
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--primary-color);
+    margin-bottom: 28px;
+    letter-spacing: 1px;
+    text-shadow: 0 2px 8px rgba(74,144,226,0.08);
+}
+
+h3 {
+    color: var(--primary-color);
+    margin-bottom: 18px;
+    font-size: 1.25rem;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+}
+
+.row-containers{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: flex-start;
+    background: transparent;
+    border-radius: var(--border-radius);
+    margin-bottom: 32px;
+    gap: 10px;
+    width: 100%;
+}
+
+.column-containers {
+    flex: 1 1 320px;
+    min-width: 280px;
+    height: 280px;
+    margin: 0;
+    padding: 22px;
+    background: var(--card-bg);
+    border: 1.5px solid #e3e8ee;
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow);
+    transition: box-shadow 0.2s;
+    position: relative;
+}
+
+.scrollable {
+    max-height: 400px;
+    overflow-y: auto;
+    padding-right: 8px;
+    scrollbar-width: thin;
+    scrollbar-color: #b6d4f7 #eaf3fb;
+}
+
+.column-containers:hover {
+    box-shadow: 0 8px 32px rgba(74,144,226,0.13), 0 2px 8px rgba(0,0,0,0.06);
+    border-color: var(--primary-color);
+}
+
+input, button {
+    display: block;
+    width: 100%;
+    margin: 12px 0;
+    padding: 12px 14px;
+    font-size: 1rem;
+    border: 1.5px solid #d1d5db;
+    border-radius: 7px;
+    background: #f8fafc;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+input:focus {
+    border-color: var(--primary-color);
+    outline: none;
+    box-shadow: 0 0 0 2px #4a90e233;
+}
+
+button {
+    background: var(--primary-gradient);
+    color: #fff;
+    border: none;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    cursor: pointer;
+    transition: background 0.3s, transform 0.1s;
+    box-shadow: 0 2px 8px rgba(74,144,226,0.08);
+}
+
+button:hover {
+    background: linear-gradient(90deg, #357ac8 0%, #4a90e2 100%);
+    transform: translateY(-2px) scale(1.03);
+}
+
+ul#topicList {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+ul#topicList li {
+    background: #eaf3fb;
+    color: var(--primary-color);
+    padding: 8px 14px;
+    margin-bottom: 8px;
+    border-radius: 6px;
+    font-size: 1rem;
+    font-weight: 500;
+    transition: background 0.2s;
+}
+
+ul#topicList li:hover {
+    background: #d2e6fa;
+}
+
+.subscriber {
+    padding: 8px 14px;
+    margin: 7px 0;
+    background: #f3f6fa;
+    border-radius: 7px;
+    color: var(--text-color);
+    font-size: 1rem;
+    font-weight: 500;
+    border-left: 4px solid var(--primary-color);
+    transition: background-color 0.5s, border-color 0.3s;
+    box-shadow: 0 1px 4px rgba(74,144,226,0.06);
+}
+
+.highlight {
+    background-color: #c0ffc0 !important;
+    border-color: var(--accent-color);
+}
+
+.published-msg {
+    padding: 16px 18px;
+    background: #f0f8ff;
+    border-left: 5px solid var(--green-color);
+    margin-top: 10px;
+    border-radius: 7px;
+    color: var(--green-color);
+    font-size: 1.08rem;
+    font-weight: 500;
+    box-shadow: 0 1px 4px rgba(74,144,226,0.06);
+}
+
+::-webkit-scrollbar {
+    width: 8px;
+    background: #eaf3fb;
+    border-radius: 8px;
+}
+::-webkit-scrollbar-thumb {
+    background: #b6d4f7;
+    border-radius: 8px;
+}
+
+.error-message {
+    color: #d9534f;
+    font-size: 0.8rem;
+    margin-top: 8px;
+    text-align: center;
+}

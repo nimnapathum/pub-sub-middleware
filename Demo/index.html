@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="/static/icon.png" type="image/png">
+    <link rel="stylesheet" href="/static/styles.css">
+    <title>Pub-Sub</title>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Publisher-Subscriber System</h1>
+
+        <div class="row-containers">
+            <!-- Block 1: Add Publisher -->
+            <div class="column-containers">
+                <h3>New Publisher</h3>
+                <input type="text" id="pubTopic" placeholder="Topic">
+                <input type="text" id="pubMessage" placeholder="Message">
+                <button onclick="publish()">Publish</button>
+                <span id="publish-error" class="error-message"></span>
+            </div>
+
+            <!-- Block 2: Add Subscriber -->
+            <div class="column-containers">
+                <h3>New Subscriber</h3>
+                <input type="text" id="subName" placeholder="Subscriber Name">
+                <input type="text" id="subTopic" placeholder="Topic">
+                <button onclick="subscribe();">Subscribe</button>
+                <span id="subscriber-error" class="error-message"></span>
+            </div>
+
+            <div class="column-containers scrollable">
+                <h3>All Topics</h3>
+                <!-- <button onclick="listTopics()">List Topics</button> -->
+                <ul id="topicList"></ul>
+            </div>
+
+        </div>
+
+        <div class="row-containers">
+            <!-- Block 4: Subscribers List with Animation -->
+            <div class="column-containers">
+                <h3>Subscribers</h3>
+                <div id="subscriberList"></div>
+            </div>
+
+            <!-- Block 5: Published Message Info -->
+            <div class="column-containers">
+                <h3>Last Published Message</h3>
+                <div class="published-msg" id="publishInfo">No messages published yet.</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const subscriberList = {};
+
+        async function subscribe() {
+            const name = document.getElementById('subName').value;
+            const topic = document.getElementById('subTopic').value;
+            const subscriberError = document.getElementById('subscriber-error');
+
+            if(!name || !topic) {
+                //alert('Please enter both subscriber name and topic.');
+                subscriberError.innerText = 'Please enter both subscriber name and topic.';
+                return;
+            }
+
+            await fetch('http://localhost:5000/subscribe', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ name, topic })
+            });
+
+            if (!subscriberList[name]) {
+                subscriberList[name] = [topic];
+                const div = document.createElement('div');
+                div.classList.add('subscriber');
+                div.id = `subscriber-${name}`;
+                div.innerText = `${name} (topics: ${subscriberList[name].join(', ')})`;
+                document.getElementById('subscriberList').appendChild(div);
+            } else {
+                // Avoid duplicate topic entries
+                if (!subscriberList[name].includes(topic)) {
+                    subscriberList[name].push(topic);
+                    const div = document.getElementById(`subscriber-${name}`);
+                    div.innerText = `${name} (topics: ${subscriberList[name].join(', ')})`;
+                }
+            }
+
+            document.getElementById('subName').value = '';
+            document.getElementById('subTopic').value = '';
+
+            listTopics();
+        }
+
+        async function publish() {
+            const topic = document.getElementById('pubTopic').value;
+            const message = document.getElementById('pubMessage').value;
+            const publishError = document.getElementById('publish-error');
+
+            if(!topic || !message) {
+                //alert('Please enter both topic and message.');
+                publishError.innerText = 'Please enter both topic and message.';
+                return;
+            }
+
+            await fetch('http://localhost:5000/publish', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ topic, message })
+            });
+
+            document.getElementById('publishInfo').innerText =
+                `Published "${message}" to topic "${topic}"`;
+
+            // animate matching subscribers
+            for (const [name, topics] of Object.entries(subscriberList)) {
+                if (topics.includes(topic)) {
+                    const elem = document.getElementById(`subscriber-${name}`);
+                    elem.classList.add('highlight');
+                    setTimeout(() => elem.classList.remove('highlight'), 1000);
+                }
+            }
+
+            document.getElementById('pubTopic').value = '';
+            document.getElementById('pubMessage').value = '';
+        
+            listTopics();
+        }
+
+        async function receive() {
+            const name = document.getElementById('recvName').value;
+
+            const res = await fetch('http://localhost:5000/receive/' + name);
+            const data = await res.json();
+
+            document.getElementById('receivedMessage').innerText =
+                data.message ? `Message: ${data.message}` : 'No message';
+        }
+
+        async function listTopics() {
+            const res = await fetch('http://localhost:5000/topics');
+            const data = await res.json();
+            const list = document.getElementById('topicList');
+            list.innerHTML = ''; // clear existing
+
+            if (data.topics.length === 0) {
+                list.innerHTML = '<li>No topics found</li>';
+                return;
+            }
+
+            data.topics.forEach(topic => {
+                const li = document.createElement('li');
+                li.innerText = topic;
+                list.appendChild(li);
+            });
+        }
+
+
+    </script>
+</body>
+
+</html>
